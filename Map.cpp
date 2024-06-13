@@ -3,7 +3,7 @@
 Map::Map() {}
 
 Map::Map(int stage){
-    _mapPath = (string)MapDataDir + "Level_" + to_string(stage) + ".txt";
+    _mapPath = "../MapData/"s + "Level_" + to_string(stage) + ".txt";
     LoadMap();
 }
 

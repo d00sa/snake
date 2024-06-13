@@ -6,7 +6,6 @@
 #include <utility>
 #include <string>
 #include <fstream>
-#define MapDataDir "../MapData/"
 using namespace std;
 class Map {
 private:

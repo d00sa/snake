@@ -13,7 +13,8 @@ void GameManager::GamePlaying() {
     while(true) {
         clear();
         _scr.Update(_map);
+
         ch = getch();
-        if (ch == 27) break;
+        if (ch == 27) break;    //esc 입력 받으면 종료.
     }
 }

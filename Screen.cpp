@@ -17,6 +17,8 @@ Screen::Screen() {
     init_pair(2, COLOR_CYAN, COLOR_BLACK);
     init_pair(3, COLOR_RED, COLOR_BLACK);
     init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(5, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(6, COLOR_BLUE, COLOR_BLACK);
     
     //초기 배경 설정
     attron(COLOR_PAIR(0));
@@ -50,10 +52,11 @@ void Screen::GameClearScreen() {
 }
 
 void Screen::NextStageScreen() {
+
 }
 
 void Screen::GamePlayScreen(Map map){
-    _gameScreen = subwin(stdscr,22,44,7,2);
+    _gameScreen = subwin(stdscr,23,80,7,2);
     wbkgd(_gameScreen, COLOR_PAIR(1));
     wattron(_gameScreen, COLOR_PAIR(1));
 
@@ -67,10 +70,43 @@ void Screen::GamePlayScreen(Map map){
             else if(value == 1 || value == -1) {
                 wattron(_gameScreen, COLOR_PAIR(2));
                 wprintw(_gameScreen, " ");
-                mvwprintw(_gameScreen, r, 2*c, "■");
+                mvwprintw(_gameScreen, r, 3*c, "■");
             }
         }        
     }
+    BorderScreen();
+}
+
+//스코어 화면 표시 함수
+void Screen::GameScordBoardScreen() {
+    _scoreScreen = subwin(stdscr,21,40,7,68);
+    wattron(_scoreScreen, COLOR_PAIR(5));
+    mvwprintw(_scoreScreen,1,1," ★ ★ ★ ★ ★ ★ ★  Score ★ ★ ★ ★ ★ ★ ★");
+    wattron(_scoreScreen, COLOR_PAIR(6));
+    mvwprintw(_scoreScreen,3,17,"B: 0");
+    mvwprintw(_scoreScreen,4,17,"+: 0");
+    mvwprintw(_scoreScreen,5,17,"-: 0");
+    mvwprintw(_scoreScreen,6,17,"G: 0");
+    mvwprintw(_scoreScreen,7,17,"Time: 0");
+    wattron(_scoreScreen, COLOR_PAIR(5));
+    mvwprintw(_scoreScreen,10,1," ★ ★ ★ ★ ★ ★ ★  Mission ★ ★ ★ ★ ★ ★ ★");
+    wattron(_scoreScreen, COLOR_PAIR(2));
+    mvwprintw(_scoreScreen,12,17,"B: 10 ()");
+    mvwprintw(_scoreScreen,13,17,"+: 5 ()");
+    mvwprintw(_scoreScreen,14,17,"-: 2 ()");
+    mvwprintw(_scoreScreen,15,17,"G: 1 ()");
+    mvwprintw(_scoreScreen,16,17,"Time: 30 ()");
+    wborder(_scoreScreen,0,0,0,0,0,0,0,0);
+}
+
+void Screen::GameNameScreen() {
+    _gameNameScreen = subwin(stdscr,6,108,1,1);
+    wattron(_scoreScreen, WA_BOLD);
+    mvwprintw(_gameNameScreen,1,31," ___  _ _  ___  _ __ ___   ___   ___  __ __  ___");
+    mvwprintw(_gameNameScreen,2,31,"/ __>| \\ || . || / /| __> /  _> | . ||  \\  \\| __>");
+    mvwprintw(_gameNameScreen,3,31,"\\__ \\|   ||   ||  \\ | _>  | <_/\\|   ||     || _> ");
+    mvwprintw(_gameNameScreen,4,31,"<___/|_\\_||_|_||_\\_\\|___> \\____/|_|_||_|_|_||___>");   
+    wattroff(_scoreScreen, WA_BOLD);
 }
 
 //게임 화면 경계 표시 함수
@@ -82,6 +118,8 @@ void Screen::BorderScreen() {
 
 void Screen::Update(Map map){
     GamePlayScreen(map);
+    GameScordBoardScreen();
+    GameNameScreen();
     refresh();
     wrefresh(_gameScreen);
 }
