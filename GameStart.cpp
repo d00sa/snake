@@ -4,7 +4,7 @@
 int main(int, char**) {
     GameManager manager;
     manager.GameStart();
-    manager.GamePlaying();
+    manager.GamePlay();
 	endwin();	
 	return 0;
 }

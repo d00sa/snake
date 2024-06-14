@@ -19,6 +19,7 @@ public:
     inline int GetMapRows() { return _mapRows; }
     inline int GetMapCols() { return _mapCols; }
     inline int GetMapValue(int r ,int c) { return _map[r][c]; }
+    inline void SetMapValue(int r ,int c, int value) { _map[r][c] = value; }
     void LoadMap();
 };
 #endif

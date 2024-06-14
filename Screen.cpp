@@ -45,16 +45,7 @@ void Screen::GameTitleScreen() {
     refresh();
 }
 
-void Screen::GameOverScreen(){
-}
-
-void Screen::GameClearScreen() {
-}
-
-void Screen::NextStageScreen() {
-
-}
-
+//게임 맵 표시 함수
 void Screen::GamePlayScreen(Map map){
     _gameScreen = subwin(stdscr,23,80,7,2);
     wbkgd(_gameScreen, COLOR_PAIR(1));
@@ -80,17 +71,17 @@ void Screen::GamePlayScreen(Map map){
 //스코어 화면 표시 함수
 void Screen::GameScordBoardScreen() {
     _scoreScreen = subwin(stdscr,21,40,7,68);
-    wattron(_scoreScreen, COLOR_PAIR(5));
+    wattron(_scoreScreen, COLOR_PAIR(5)| A_BOLD);
     mvwprintw(_scoreScreen,1,1," ★ ★ ★ ★ ★ ★ ★  Score ★ ★ ★ ★ ★ ★ ★");
-    wattron(_scoreScreen, COLOR_PAIR(6));
+    wattron(_scoreScreen, COLOR_PAIR(6)| A_BOLD);
     mvwprintw(_scoreScreen,3,17,"B: 0");
     mvwprintw(_scoreScreen,4,17,"+: 0");
     mvwprintw(_scoreScreen,5,17,"-: 0");
     mvwprintw(_scoreScreen,6,17,"G: 0");
     mvwprintw(_scoreScreen,7,17,"Time: 0");
-    wattron(_scoreScreen, COLOR_PAIR(5));
+    wattron(_scoreScreen, COLOR_PAIR(5)| A_BOLD);
     mvwprintw(_scoreScreen,10,1," ★ ★ ★ ★ ★ ★ ★  Mission ★ ★ ★ ★ ★ ★ ★");
-    wattron(_scoreScreen, COLOR_PAIR(2));
+    wattron(_scoreScreen, COLOR_PAIR(2)| A_BOLD);
     mvwprintw(_scoreScreen,12,17,"B: 10 ()");
     mvwprintw(_scoreScreen,13,17,"+: 5 ()");
     mvwprintw(_scoreScreen,14,17,"-: 2 ()");
@@ -99,6 +90,7 @@ void Screen::GameScordBoardScreen() {
     wborder(_scoreScreen,0,0,0,0,0,0,0,0);
 }
 
+//게임 상단 겜 이름 표시 함수
 void Screen::GameNameScreen() {
     _gameNameScreen = subwin(stdscr,6,108,1,1);
     wattron(_scoreScreen, WA_BOLD);
@@ -109,17 +101,40 @@ void Screen::GameNameScreen() {
     wattroff(_scoreScreen, WA_BOLD);
 }
 
+//뱀 게임에 출력
+void Screen::GameSnakeScreen(Snake snake) {
+    vector<pair<int,int>> SnakePos = snake.GetSnakePos();
+
+    wattron(_gameScreen, COLOR_PAIR(6));
+
+    //머리
+    wprintw(_gameScreen, " ");
+    mvwprintw(_gameScreen, SnakePos[0].first, 2*SnakePos[0].second, "●");
+
+    //몸
+    for(int i=1; i < snake.GetSnakeLength(); i++) {
+        pair<int,int> p = SnakePos[i];
+        wprintw(_gameScreen, " ");
+        mvwprintw(_gameScreen, p.first, 2*p.second, "○");
+    }
+}
+
 //게임 화면 경계 표시 함수
 void Screen::BorderScreen() {
     attron(COLOR_PAIR(3));
-    border(0, 0, 0, 0, 0, 0, 0, 0);
+    wborder(stdscr,0, 0, 0, 0, 0, 0, 0, 0);
     attroff(COLOR_PAIR(3));
 }
 
-void Screen::Update(Map map){
+//게임 화면 refresh 함수
+void Screen::Update(Map map,Snake snake) {
     GamePlayScreen(map);
     GameScordBoardScreen();
     GameNameScreen();
+    GameSnakeScreen(snake);
+
     refresh();
     wrefresh(_gameScreen);
+    wrefresh(_scoreScreen);
+    wrefresh(_gameNameScreen);
 }
