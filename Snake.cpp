@@ -1,18 +1,18 @@
 #include "Snake.h"
 Snake::Snake(Map &map) {
-    _direction = 'r';
+    _direction = 'l';
     _snakeLength = 3;
     _maxSnakeLength = 3;
     _isDead = false;
+    _tail.push_back(make_pair(0,0));
     for (int i = 0; i < map.GetMapRows(); i++) {
         for (int j = 0; j < map.GetMapCols(); j++) {
             if (map.GetMapValue(i,j) == 3){
-                _snakePos.push_back(make_pair(i,j));
+                _snakePos.insert(_snakePos.begin(),make_pair(i,j));
                 map.SetMapValue(i,j,0);
             }
             else if (map.GetMapValue(i,j) == 4){
                 _snakePos.push_back(make_pair(i,j));
-                _tail.push_back(make_pair(i,j));
                 map.SetMapValue(i,j,0);
             }
         }        

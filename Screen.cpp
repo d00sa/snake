@@ -47,7 +47,7 @@ void Screen::GameTitleScreen() {
 
 //°ÔÀÓ ¸Ê Ç¥½Ã ÇÔ¼ö
 void Screen::GamePlayScreen(Map map){
-    _gameScreen = subwin(stdscr,23,80,7,2);
+    _gameScreen = subwin(stdscr,22,64,7,2);
     wbkgd(_gameScreen, COLOR_PAIR(1));
     wattron(_gameScreen, COLOR_PAIR(1));
 
@@ -56,7 +56,7 @@ void Screen::GamePlayScreen(Map map){
            int value = map.GetMapValue(r,c);
            if (value == 0) {
                 wattron(_gameScreen, COLOR_PAIR('w'));
-                wprintw(_gameScreen, "  ");
+                wprintw(_gameScreen, "    ");
            }
             else if(value == 1 || value == -1) {
                 wattron(_gameScreen, COLOR_PAIR(2));
@@ -110,7 +110,7 @@ void Screen::GameSnakeScreen(Snake snake) {
     //¸Ó¸®
     wprintw(_gameScreen, " ");
     mvwprintw(_gameScreen, SnakePos[0].first, 2*SnakePos[0].second, "¡Ü");
-
+    
     //¸ö
     for(int i=1; i < snake.GetSnakeLength(); i++) {
         pair<int,int> p = SnakePos[i];

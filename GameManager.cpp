@@ -17,14 +17,13 @@ void GameManager::GamePlay() {
 }
 
 void GameManager::PlayingLevelStage() {
-    srand((unsigned int)time(0));
-    nodelay(stdscr, TRUE);
     _snake = Snake(_map);
     _scr.Update(_map,_snake);
     bool IsGameOver = false;
 
     while (!IsGameOver) {
         _snake.SetKeyDir();
+        _snake.SnakeUpdate();
         _scr.Update(_map,_snake);
     }
 }
