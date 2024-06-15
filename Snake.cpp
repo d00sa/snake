@@ -5,6 +5,7 @@ Snake::Snake(Map &map) {
     _maxSnakeLength = 3;
     _growthCount = 0;
     _degenerationCount = 0;
+    _gateCount = 0;
     _isDead = false;
     _tail.push_back(make_pair(0,0));
     for (int i = 0; i < map.GetMapRows(); i++) {
@@ -21,7 +22,18 @@ Snake::Snake(Map &map) {
     }        
 }
 
-void Snake::SetKeyDir() {
+void Snake::UseGate(pair<int, int> pos) {
+    _isUseGate = true;
+    _moveGatePos = pos;
+}
+
+void Snake::FinishGate() {
+    _isUseGate = false;
+    _moveGatePos = make_pair(0,0);
+}
+
+void Snake::SetKeyDir()
+{
     int Key = getch();
     switch(Key) {
         case KEY_LEFT:

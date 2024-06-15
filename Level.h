@@ -1,5 +1,5 @@
-#ifndef __LEVEL__
-#define __LEVEL__
+#ifndef LEVEL_H
+#define LEVEL_H
 
 #include "Map.h"
 #include "Mission.h"

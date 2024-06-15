@@ -19,6 +19,9 @@ private:
     int _maxSnakeLength;
     int _growthCount;
     int _degenerationCount;
+    int _gateCount;
+    bool _isUseGate;
+    pair<int,int> _moveGatePos; //게이트로 이동한 좌표
 public:
     Snake() = default;
     Snake(Map& map);
@@ -44,6 +47,20 @@ public:
     inline int GetGrowthCount() {return _growthCount;}
 
     inline int GetDenerationCount() {return _degenerationCount; }
+
+    inline int GetGateUseCount() { return _gateCount; }
+
+    inline bool IsUseGate() { return _isUseGate; }
+
+    inline int IncreaseGateCount() { return _gateCount++; } //게이트 이용 수 증가
+
+    inline void SetSnakeHeadPos(pair<int,int> p) {_snakePos[0] = p;}
+
+    inline pair<int,int> GetGatePos() {return _moveGatePos;}
+
+    void UseGate(pair<int,int> pos);    //게이트 사용중
+
+    void FinishGate();  //게이트 이용 끝
 
     void SetKeyDir();   //뱀 방향 키값으로 설정
 

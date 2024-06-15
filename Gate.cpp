@@ -3,37 +3,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-Gate::Gate (Map _map) { setGatePos(_map); }
+Gate::Gate (Map& _map) { setGatePos(_map); }
 
-void Gate::setGatePos(Map _map) {
+void Gate::setGatePos(Map& _map) {
     
-    srand((unsigned int)time(0));
+    srand((unsigned int)time(NULL));
 
-    int x1 = rand() % _map.GetMapCols;
-    int y1 = rand() % _map.GetMapRows;
-    int x2 = rand() % _map.GetMapCols;
-    int y2 = rand() % _map.GetMapRows;
+    int x1 = rand() % _map.GetMapCols();
+    int y1 = rand() % _map.GetMapRows();
+    int x2 = rand() % _map.GetMapCols();
+    int y2 = rand() % _map.GetMapRows();
 
-    if (_map._map[y1][x1] == 1) posA = {y1, x1};
+    if (_map.GetMapValue(y1,x1) == 1) posA = {y1, x1};
     else {
         while (true) {
-            if (_map._map[y1][x1] == 1) break;
-            x1 = rand() % _map.GetMapCols;
-            y1 = rand() % _map.GetMapRows;
+            if (_map.GetMapValue(y1,x1) == 1) break;
+            x1 = rand() % _map.GetMapCols();
+            y1 = rand() % _map.GetMapRows();
             posA = {y1, x1};
         }
     }
 
-    if ((_map._map[y2][x2] == 1) && (x1 != x2 || y1 != y2) && isGateEntranceShared(x1, y1, x2, y2)) {
+    if ((_map.GetMapValue(y2,x2) == 1) && (x1 != x2 || y1 != y2) && isGateEntranceShared(x1, y1, x2, y2)) {
         posB = {y2, x2};
     }
     else {
         while (true) {
-            if ((_map._map[y2][x2] == 1) && (x1 != x2 || y1 != y2) && isGateEntranceShared(x1, y1, x2, y2)) {
+            if ((_map.GetMapValue(y2,x2) == 1) && (x1 != x2 || y1 != y2) && isGateEntranceShared(x1, y1, x2, y2)) {
                 break;
             }
-            x2 = rand() % _map.GetMapCols;
-            y2 = rand() % _map.GetMapRows;
+            x2 = rand() % _map.GetMapCols();
+            y2 = rand() % _map.GetMapRows();
             posB = {y2, x2};
         }
     }
@@ -42,16 +42,16 @@ void Gate::setGatePos(Map _map) {
 
 }
 
-void Gate::setDirections(Map _map) {
+void Gate::setDirections(Map& _map) {
 
-    int r = _map.GetMapRows;  // height
-    int c = _map.GetMapCols;  // width
+    int r = _map.GetMapRows();  // height
+    int c = _map.GetMapCols();  // width
 
     int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
 
     for (int i = 0; i < 4; i++) {
-        int newY = posA.first + dir[i][0];
-        int newX = posA.second + dir[i][1];
+        int newY = posA.first + directions[i][0];
+        int newX = posA.second + directions[i][1];
         if ((0 <= newY && newY < r) && (0 <= newX && newX < c)) {
             posA_Directions[i] = _map.GetMapValue(newY, newX);
         }
@@ -59,8 +59,8 @@ void Gate::setDirections(Map _map) {
     }
 
     for (int i = 0; i < 4; i++) {
-        int newY = posB.first + dir[i][0];
-        int newX = posB.second + dir[i][1];
+        int newY = posB.first + directions[i][0];
+        int newX = posB.second + directions[i][1];
         if ((0 <= newY && newY < r) && (0 <= newX && newX < c)) {
             posB_Directions[i] = _map.GetMapValue(newY, newX);
         }

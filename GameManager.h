@@ -9,6 +9,7 @@
 #include <Level.h>
 #include <Item.h>
 #include <Mission.h>
+#include <Gate.h>
 
 class GameManager
 {
@@ -18,6 +19,7 @@ private:
     Screen _scr;
     Level _level;
     vector<Item> _items;
+    vector<Gate> _gates;
     Mission _mission;
     int _gamePlayTime;
 public:
@@ -27,8 +29,10 @@ public:
     void PlayingLevelStage();  //현재 level의 stage 플레이.
     bool IsSnakeGetItem();
     bool IsCollision();
-    bool isGameOver();
-    bool isGameClear();
+    bool IsUsingGate();
+    bool IsGameOver();
+    bool IsLevelStageClear();
+    bool IsGameClear();
 };
 
 #endif

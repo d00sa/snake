@@ -12,6 +12,7 @@ Screen::Screen() {
     start_color();
     
     //색상 정의
+    init_color(PINK_COLOR, 1000, 500, 700);
     init_pair(0, COLOR_WHITE, COLOR_BLACK);
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_CYAN, COLOR_BLACK);
@@ -19,6 +20,7 @@ Screen::Screen() {
     init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(5, COLOR_YELLOW, COLOR_BLACK);
     init_pair(6, COLOR_BLUE, COLOR_BLACK);
+    init_pair(7, PINK_COLOR, COLOR_BLACK);
     
     //초기 배경 설정
     attron(COLOR_PAIR(0));
@@ -83,6 +85,7 @@ void Screen::GameScordBoardScreen(Snake& snake, Mission& mission, int gamePlayTi
     mvwprintw(_scoreScreen,5,17,"-: ");
     mvwprintw(_scoreScreen,5,20,to_string(snake.GetDenerationCount()).c_str());
     mvwprintw(_scoreScreen,6,17,"G: ");
+    mvwprintw(_scoreScreen,6,20,to_string(snake.GetGateUseCount()).c_str());
     mvwprintw(_scoreScreen,7,17,"Time: ");
     mvwprintw(_scoreScreen,7,23,to_string(gamePlayTime).c_str());
 
@@ -99,8 +102,9 @@ void Screen::GameScordBoardScreen(Snake& snake, Mission& mission, int gamePlayTi
     mvwprintw(_scoreScreen,14,17,"-: ");
     mvwprintw(_scoreScreen,14,20,to_string(mission.getPoisonObjective()).c_str());
     if(mission.getPoisonObjective() <= snake.GetDenerationCount()) mvwprintw(_scoreScreen, 14, 23, "(v)");
-    mvwprintw(_scoreScreen,15,17,"G: ");
+    mvwprintw(_scoreScreen,15,17,"G: ");    
     mvwprintw(_scoreScreen,15,20,to_string(mission.getGateObjective()).c_str());
+    if(mission.getGateObjective() <= snake.GetGateUseCount()) mvwprintw(_scoreScreen, 15, 23, "(v)");
     wborder(_scoreScreen,0,0,0,0,0,0,0,0);
 }
 
@@ -147,7 +151,59 @@ void Screen::GameItemScreen(vector<Item> &items) {
     }
 }
 
-//게임 화면 경계 표시 함수
+void Screen::GameStageClearScreen() {
+    clear();
+    nodelay(stdscr, FALSE);
+    attron(COLOR_PAIR(0));
+    mvprintw(12, 49, "Stage Clear!");
+    mvprintw(17, 41, "Press Any Key to Next Stage");
+    BorderScreen();
+    getch();
+    refresh();
+}
+
+void Screen::GameGateScreen(vector<Gate>& gate) {
+    wattron(_gameScreen, COLOR_PAIR(7));
+    if(!gate.empty()) {
+        pair<int,int> gatepos1 = gate[0].getGatePos(1);
+        pair<int,int> gatepos2 = gate[0].getGatePos(2);
+        mvwprintw(_gameScreen, gatepos1.first, 2*gatepos1.second, "■");
+        mvwprintw(_gameScreen, gatepos2.first, 2*gatepos2.second, "■");
+    }
+    BorderScreen();
+}
+
+void Screen::GameClearScreen() {
+    clear();
+    nodelay(stdscr, FALSE);
+    attron(COLOR_PAIR(2));
+    mvprintw(8, 10, "  #####   ##   ##    ###    ##  ##   #######             ####     ###    ##   ##  ####### ");
+    mvprintw(9, 10, " ##   ##  ###  ##   ## ##   ##  ##    ##   #            ##  ##   ## ##   ### ###   ##   # ");
+    mvprintw(10, 10, " ##       #### ##  ##   ##  ## ##     ##               ##       ##   ##  #######   ##     ");
+    mvprintw(11, 10, "  #####   ## ####  #######  ####      ####             ##  ###  #######  ## # ##   ####   ");
+    mvprintw(12, 10, "      ##  ##  ###  ##   ##  ## ##     ##               ##   ##  ##   ##  ##   ##   ##     ");
+    mvprintw(13, 10, " ##   ##  ##   ##  ##   ##  ##  ###   ##   #            ## ###  ##   ##  ##   ##   ##   # ");
+    mvprintw(14, 10, "  #####   ##   ##  ##   ##  ##   ##  #######             ### #  ##   ##  ##   ##  ####### ");
+    attron(COLOR_PAIR('w'));
+    mvprintw(19, 50, "Game Clear!!");
+    mvprintw(22, 34, "C++ Snake 프로젝트 김치우 / 김민규 / 황시현");
+    BorderScreen();
+    getch();
+    refresh();    
+}
+
+void Screen::GameOverScreen() {
+    clear();
+    nodelay(stdscr, FALSE);
+    attron(COLOR_PAIR(2));
+    mvprintw(12, 50, "Game Over!!");
+    mvprintw(17, 44, "Press Any Key to Quit..");
+    BorderScreen();
+    getch();
+    clear();
+}
+
+// 게임 화면 경계 표시 함수
 void Screen::BorderScreen() {
     attron(COLOR_PAIR(3));
     wborder(stdscr,0, 0, 0, 0, 0, 0, 0, 0);
@@ -155,12 +211,13 @@ void Screen::BorderScreen() {
 }
 
 //게임 화면 refresh 함수
-void Screen::Update(Map& map,Snake& snake,vector<Item>& items,Mission& mission,int gamePlayTime) {
+void Screen::Update(Map& map,Snake& snake,vector<Item>& items,Mission& mission,vector<Gate>& gate,int gamePlayTime) {
     GamePlayScreen(map);
     GameScordBoardScreen(snake,mission,gamePlayTime);
     GameNameScreen();
     GameSnakeScreen(snake);
     GameItemScreen(items);
+    GameGateScreen(gate);
 
     refresh();
     wrefresh(_gameScreen);
