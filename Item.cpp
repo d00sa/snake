@@ -15,22 +15,22 @@ Item::Item(Map _map, Snake _snake) {
 
 void Item::setItemPos(Map _map) {
 
-    srand((unsigned int)time(0));
+    srand((unsigned int)time(NULL));
 
-    int x = (rand() % (_map.GetMapCols - 1)) + 1;
-    int y = (rand() % (_map.GetMapRows - 1)) + 1;
+    int x = (rand() % (_map.GetMapCols() - 1)) + 1;
+    int y = (rand() % (_map.GetMapRows() - 1)) + 1;
 
-    if (_map._map[y][x] == 0) {
-        itemPos = pair <ll, ll> (y, x);
+    if (_map.GetMapValue(y,x) == 0) {
+        itemPos = pair <int, int> (y, x);
         itemTypeCode = (rand() % 2 == 0 ? 1 : 0);
     }
     else {
         while (true) {
-            if (_map._map[y][x] == 0) break;
-            int x = (rand() % (_map.GetMapCols - 1)) + 1;
-            int y = (rand() % (_map.GetMapRows - 1)) + 1;
-            if (_map._map[y][x] == 0) {
-                itemPos = pair <ll, ll> (y, x);
+            if (_map.GetMapValue(y,x) == 0) break;
+            int x = (rand() % (_map.GetMapCols() - 1)) + 1;
+            int y = (rand() % (_map.GetMapRows() - 1)) + 1;
+            if (_map.GetMapValue(y,x) == 0) {
+                itemPos = pair <int, int> (y, x);
                 itemTypeCode = (rand() % 2 == 0 ? 1 : 0);
             }
         }
@@ -41,15 +41,19 @@ void Item::setItemPos(Map _map) {
 bool Item::overlapWithSnake(Snake _snake) {
 
     for (int i = 0; i < _snake.GetSnakeLength(); i++) {
-        int nx = _snake._snakePos[i].first;
-        int ny = _snake._snakePos[i].second;
-        if ((nx == itemPos.first) || (ny == itemPos.second)) return true;
+        int nx = _snake.GetSnakePos()[i].second;
+        int ny = _snake.GetSnakePos()[i].first;
+        if ((ny == itemPos.first) || (nx == itemPos.second)) return true;
     }
 
     return false;
 
 }
 
-pair <ll, ll> Item::getItemPos() { return itemPos; }
+pair <int, int> Item::getItemPos() { return itemPos; }
 
 bool Item::isGrowthItem() { return !itemTypeCode; }
+
+bool Item::operator==(Item &i) {
+    return (itemPos.first == i.itemPos.first) && (itemPos.second == i.itemPos.second);
+}

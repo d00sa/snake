@@ -3,6 +3,8 @@ Snake::Snake(Map &map) {
     _direction = 'l';
     _snakeLength = 3;
     _maxSnakeLength = 3;
+    _growthCount = 0;
+    _degenerationCount = 0;
     _isDead = false;
     _tail.push_back(make_pair(0,0));
     for (int i = 0; i < map.GetMapRows(); i++) {
@@ -85,4 +87,19 @@ void Snake::CheckSnakeHeadPos() {
             break;
         }
     }
+}
+
+void Snake::Growth() {
+    int x = _tail[_tail.size()-1].second;
+    int y = _tail[_tail.size()-1].first;
+    _snakePos.push_back(make_pair(y, x));
+    SetMaxSnakeLength();
+    _snakeLength++;
+    _growthCount++;
+}
+
+void Snake::Degeneration() {
+    _snakePos.pop_back();
+    _snakeLength--;
+    _degenerationCount++;
 }

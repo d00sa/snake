@@ -1,3 +1,7 @@
+#ifndef ITEM_H
+#define ITEM_H
+
+#pragma once
 #include "Map.h"
 #include "Snake.h"
 
@@ -18,6 +22,7 @@ class Item {
         bool overlapWithSnake(Snake _snake);
         bool isGrowthItem();
 
-        //bool operator==(Item& i);
+        bool operator==(Item& i);
 
-}
+};
+#endif

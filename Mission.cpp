@@ -4,7 +4,7 @@ using namespace std;
 
 Mission::Mission(int level) {
 
-    pathToMission = "../mission/mission" + to_string(level) + ".txt";
+    pathToMission = "../Mission/Mission_" + to_string(level) + ".txt";
     fetchMission();
 
 }
@@ -14,7 +14,6 @@ void Mission::fetchMission() {
     ifstream inFile(pathToMission);
 
     for (int i = 0; i < 4; i++) inFile >> objectives[i];
-
 }
 
 int Mission::getScoreObjective() { return objectives[0]; }
