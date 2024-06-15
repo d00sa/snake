@@ -14,11 +14,14 @@ void GameManager::GameStart(){
 void GameManager::GamePlay() {
     clear();
     while(!IsGameClear()) {
+        printf("스테이지 %d 시작합니다.\n",_level.getNowLevel());
         clear();
         PlayingLevelStage();
 
         if (_level.checkCompleted()){
-            if (_level.getNowLevel() == 3) break;
+            if (_level.getNowLevel() == 3) {
+                break;
+            }
             _level.increaseLevel();
             _scr.GameStageClearScreen();
         }
@@ -27,7 +30,8 @@ void GameManager::GamePlay() {
             break;
         }        
     }
-    if (IsGameClear()) _scr.GameClearScreen();
+    if (IsGameClear())
+        _scr.GameClearScreen();
 }
 
 void GameManager::PlayingLevelStage() {
@@ -51,11 +55,12 @@ void GameManager::PlayingLevelStage() {
     DeleteTimer.TimerStart();
     GateTimer.TimerStart();
     _gamePlayTime = 0;
+    printf("게임 설정 완료.\n");
 
     _scr.Update(_map,_snake,_items,_mission,_gates,_gamePlayTime);
-    bool GameOver = false;
+    bool GamePlay = true;
 
-    while (!GameOver) {
+    while (GamePlay) {
         GameTimer.TimerUpdate();
         ItemTimer.TimerUpdate();
         ClockTimer.TimerUpdate();
@@ -79,24 +84,24 @@ void GameManager::PlayingLevelStage() {
             if(IsUsingGate()) GateTimer.TimerStart();
 
             _level.markCompleted(false);
-            GameOver = IsGameOver() && !IsLevelStageClear();
+            GamePlay = !IsGameOver() && !IsLevelStageClear();
             _scr.Update(_map,_snake,_items,_mission,_gates,_gamePlayTime);
             ClockTimer.TimerStart();
         }
 
-        // if(ItemTimer.GetTimeToTick() > rand() % 3 + 3) {
-        //     if(_items.size() < 3) {
-        //         Item newItem = Item(_map, _snake);
-        //         for(int i=0; i < _items.size(); i++) {
-        //             if(_items[i] == newItem) {
-        //                 newItem = Item(_map, _snake);
-        //                 i = 0;
-        //             }
-        //         }
-        //         _items.push_back(newItem);
-        //     }
-        //     ItemTimer.TimerStart();
-        // }
+        if(ItemTimer.GetTimeToTick() > rand() % 3 + 3) {
+            if(_items.size() < 3) {
+                Item newItem = Item(_map, _snake);
+                for(int i=0; i < _items.size(); i++) {
+                    if(_items[i] == newItem) {
+                        newItem = Item(_map, _snake);
+                        i = 0;
+                    }
+                }
+                _items.push_back(newItem);
+            }
+            ItemTimer.TimerStart();
+        }
 
         if (GateTimer.GetTimeToTick() > 8){
             if (_gates.size() < 1){
@@ -233,6 +238,7 @@ bool GameManager::IsLevelStageClear() {
     if(_snake.GetGrowthCount() < StageMission.getGrowObjective()) return false;
     if(_snake.GetDenerationCount() < StageMission.getPoisonObjective()) return false;
     if(_snake.GetGateUseCount() < StageMission.getGateObjective()) return false;
+    _level.markCompleted(true);
     return true;
 }
 

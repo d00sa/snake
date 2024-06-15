@@ -20,18 +20,18 @@ void Item::setItemPos(Map _map) {
     int x = (rand() % (_map.GetMapCols() - 1)) + 1;
     int y = (rand() % (_map.GetMapRows() - 1)) + 1;
 
-    if (_map.GetMapValue(y,x) == 0) {
+    if (_map.GetMapValue(y, x) == 0) {
         itemPos = pair <int, int> (y, x);
         itemTypeCode = (rand() % 2 == 0 ? 1 : 0);
     }
     else {
-        while (true) {
-            if (_map.GetMapValue(y,x) == 0) break;
+        while (_map.GetMapValue(y, x) != 0) {
             int x = (rand() % (_map.GetMapCols() - 1)) + 1;
             int y = (rand() % (_map.GetMapRows() - 1)) + 1;
-            if (_map.GetMapValue(y,x) == 0) {
+            if (_map.GetMapValue(y, x) == 0) {
                 itemPos = pair <int, int> (y, x);
                 itemTypeCode = (rand() % 2 == 0 ? 1 : 0);
+                break;
             }
         }
     }
