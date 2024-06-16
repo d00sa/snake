@@ -19,9 +19,7 @@ void GameManager::GamePlay() {
         PlayingLevelStage();
 
         if (_level.checkCompleted()){
-            if (_level.getNowLevel() == 3) {
-                break;
-            }
+            if (_level.getNowLevel() >= 3) break;
             _level.increaseLevel();
             _scr.GameStageClearScreen();
         }
@@ -30,24 +28,24 @@ void GameManager::GamePlay() {
             break;
         }        
     }
-    if (IsGameClear())
-        _scr.GameClearScreen();
+    if (IsGameClear()) _scr.GameClearScreen();
 }
 
 void GameManager::PlayingLevelStage() {
     srand((unsigned int)time(NULL));
     nodelay(stdscr,TRUE);
-    Timer GameTimer;
-    Timer ItemTimer;
-    Timer ClockTimer;
-    Timer GateTimer;
-    Timer DeleteTimer;
-
+    
     _map = _level.getNowMap();
     _snake = Snake(_map);
     _mission = _level.getMission();
     _gates.clear();
     _items.clear();
+
+    Timer GameTimer;
+    Timer ItemTimer;
+    Timer ClockTimer;
+    Timer GateTimer;
+    Timer DeleteTimer;
 
     GameTimer.TimerStart();
     ItemTimer.TimerStart();
@@ -71,7 +69,7 @@ void GameManager::PlayingLevelStage() {
          
         _snake.SetKeyDir();
 
-        if (ClockTimer.GetTimeToTick() > 0.2){
+        if (ClockTimer.GetTimeToTick() > 0.3){
             _snake.SnakeUpdate();
 
             if(!IsSnakeGetItem()){
@@ -89,7 +87,7 @@ void GameManager::PlayingLevelStage() {
             ClockTimer.TimerStart();
         }
 
-        if(ItemTimer.GetTimeToTick() > rand() % 3 + 3) {
+        if(ItemTimer.GetTimeToTick() > rand() % 3 + 4) {
             if(_items.size() < 3) {
                 Item newItem = Item(_map, _snake);
                 for(int i=0; i < _items.size(); i++) {
@@ -103,7 +101,7 @@ void GameManager::PlayingLevelStage() {
             ItemTimer.TimerStart();
         }
 
-        if (GateTimer.GetTimeToTick() > 8){
+        if (GateTimer.GetTimeToTick() >= 10){
             if (_gates.size() < 1){
                 Gate NewGate = Gate(_map);
                 _gates.push_back(NewGate);
@@ -133,14 +131,21 @@ bool GameManager::IsSnakeGetItem() {
 
 //충돌 하였는가? (벽,충돌 불가능한 벽)
 bool GameManager::IsCollision() {
+    printf("충돌체크중..\n");
     pair<int,int> Head = _snake.GetSnakePos()[0];
     int Value = _map.GetMapValue(Head.first, Head.second);
-    if((Value == 1) || (Value == -1)) {
+    printf("%d is Value\n",Value);
+    if((Value == 1) || (Value == -1)) { 
         if(!_gates.empty()) {
+            printf("게이트 있는뎀..\n");
+            printf("Head: [%d,%d]\n",Head.first,Head.second);
+            printf("gateA: [%d,%d]\n",_gates[0].getGatePos(1).first,_gates[0].getGatePos(1).second);
+            printf("gateB: [%d,%d]\n",_gates[0].getGatePos(2).first,_gates[0].getGatePos(2).second);
             if(Head == _gates[0].getGatePos(1) || Head == _gates[0].getGatePos(2)) {
                 return false;
             }
         }
+        printf("충돌이야!!\n");
         return true;
     }
     return false;

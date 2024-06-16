@@ -32,7 +32,7 @@ public:
 
     inline int GetSnakeLength() {return _snakePos.size(); }   //뱀 길이 가져오기
 
-    inline int SetMaxSnakeLength() {if (GetSnakeLength() > _maxSnakeLength) _maxSnakeLength = GetSnakeLength(); }    //뱀 최대 길이 설정
+    inline void SetMaxSnakeLength() {if (GetSnakeLength() > _maxSnakeLength) _maxSnakeLength = GetSnakeLength(); }    //뱀 최대 길이 설정
 
     inline int GetMaxSnakeLength() {return _maxSnakeLength; }    //뱀 최대 길이 가져오기
 

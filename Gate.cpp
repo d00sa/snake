@@ -14,18 +14,17 @@ void Gate::setGatePos(Map& _map) {
     int x2 = rand() % _map.GetMapCols();
     int y2 = rand() % _map.GetMapRows();
 
-    if (_map.GetMapValue(y1,x1) == 1) posA = {y1, x1};
+    if (_map.GetMapValue(y1,x1) == 1) posA = make_pair(y1, x1);
     else {
-        while (true) {
-            if (_map.GetMapValue(y1,x1) == 1) break;
+        while (_map.GetMapValue(y1,x1) != 1) {
             x1 = rand() % _map.GetMapCols();
             y1 = rand() % _map.GetMapRows();
-            posA = {y1, x1};
+            posA = make_pair(y1, x1);
         }
     }
 
     if ((_map.GetMapValue(y2,x2) == 1) && (x1 != x2 || y1 != y2) && isGateEntranceShared(x1, y1, x2, y2)) {
-        posB = {y2, x2};
+        posB = make_pair(y2, x2);
     }
     else {
         while (true) {
@@ -34,7 +33,7 @@ void Gate::setGatePos(Map& _map) {
             }
             x2 = rand() % _map.GetMapCols();
             y2 = rand() % _map.GetMapRows();
-            posB = {y2, x2};
+            posB = make_pair(y2, x2);
         }
     }
 
@@ -47,7 +46,7 @@ void Gate::setDirections(Map& _map) {
     int r = _map.GetMapRows();  // height
     int c = _map.GetMapCols();  // width
 
-    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
+    int directions[4][2] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
 
     for (int i = 0; i < 4; i++) {
         int newY = posA.first + directions[i][0];
@@ -55,7 +54,7 @@ void Gate::setDirections(Map& _map) {
         if ((0 <= newY && newY < r) && (0 <= newX && newX < c)) {
             posA_Directions[i] = _map.GetMapValue(newY, newX);
         }
-        else posA_Directions[i] = 2;
+        else posA_Directions[i] = -1;
     }
 
     for (int i = 0; i < 4; i++) {
@@ -64,7 +63,7 @@ void Gate::setDirections(Map& _map) {
         if ((0 <= newY && newY < r) && (0 <= newX && newX < c)) {
             posB_Directions[i] = _map.GetMapValue(newY, newX);
         }
-        else posB_Directions[i] = 2;
+        else posB_Directions[i] = -1;
     }
 
 }
@@ -94,9 +93,10 @@ bool Gate::isGateEntranceShared(int x1, int y1, int x2, int y2) {
     bool ret = true;
 
     for (int i = 0; i < 8; i++) {
-        if ((y2 == y1 + dir[i][0]) && (x2 == x1 + dir[i][1])) ret = false;
+        if ((y2 == (y1 + dir[i][0])) && (x2 == (x1 + dir[i][1]))){
+            ret = false;
+            return ret;
+        }
     }
-
     return ret;
-
 }

@@ -1,6 +1,5 @@
 #include "Screen.h"
 #include <locale.h>
-
 Screen::Screen() {
     //초기 설정
     setlocale(LC_ALL,"");
@@ -10,9 +9,8 @@ Screen::Screen() {
     noecho();
     curs_set(0);
     start_color();
-    
+
     //색상 정의
-    init_color(PINK_COLOR, 1000, 500, 700);
     init_pair(0, COLOR_WHITE, COLOR_BLACK);
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_CYAN, COLOR_BLACK);
@@ -20,7 +18,6 @@ Screen::Screen() {
     init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(5, COLOR_YELLOW, COLOR_BLACK);
     init_pair(6, COLOR_BLUE, COLOR_BLACK);
-    init_pair(7, PINK_COLOR, COLOR_BLACK);
     
     //초기 배경 설정
     attron(COLOR_PAIR(0));
@@ -40,7 +37,7 @@ void Screen::GameTitleScreen() {
     attroff(COLOR_PAIR(2));
 
     attron(COLOR_PAIR(0));
-    mvprintw(22, 35, "게임을 시작하려면 아무키나 눌러주십시오");
+    mvprintw(22, 41, "Press Any Key Start to Game!");
     attroff(COLOR_PAIR(0));
 
     BorderScreen();
@@ -163,7 +160,7 @@ void Screen::GameStageClearScreen() {
 }
 
 void Screen::GameGateScreen(vector<Gate>& gate) {
-    wattron(_gameScreen, COLOR_PAIR(7));
+    wattron(_gameScreen, COLOR_PAIR(4));
     if(!gate.empty()) {
         pair<int,int> gatepos1 = gate[0].getGatePos(1);
         pair<int,int> gatepos2 = gate[0].getGatePos(2);
